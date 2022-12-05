@@ -80,5 +80,19 @@ public class CreditCardAccountServiceImpl implements ICreditCardAccountService{
 		
 		return creditCardAccountRepository.delete(resultNew);
 	}
+	
+	@Override
+	public Mono<Boolean> haveCreditCard(String personCode) throws Exception {
+		// TODO Auto-generated method stub
+		Mono<Boolean> col = creditCardAccountRepository.findAll().filter(x -> x.getPersonCode().equals(personCode)).count().flatMap( c -> {
+			if(c > 0) {
+				return Mono.just(true);
+			}else {
+				return Mono.just(false);
+			}
+		});
+		
+		return col;
+	}
 
 }

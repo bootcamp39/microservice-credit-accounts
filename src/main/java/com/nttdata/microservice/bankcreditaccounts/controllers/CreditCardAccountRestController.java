@@ -4,10 +4,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nttdata.microservice.bankcreditaccounts.collections.CreditCardAccountCollection;
@@ -37,7 +37,7 @@ public class CreditCardAccountRestController {
 	}
 	
 	@GetMapping(value = "/find/{personCode}")
-	public Flux<CreditCardAccountCollection> getCreditCatdAccountsByPersonCode(@RequestParam("personCode") String personCode) throws Exception{
+	public Flux<CreditCardAccountCollection> getCreditCatdAccountsByPersonCode(@PathVariable("personCode") String personCode) throws Exception{
 		log.info("EJECUTANDO ENDPOINT CreditCardAccountRestController.getCreditCatdAccountsByPersonCode "+personCode);
 		return creditCardAccountService.getByPersonCode(personCode);
 	}
@@ -67,16 +67,17 @@ public class CreditCardAccountRestController {
 		return creditCardAccountFacadeService.consumeCreditCard(creditMovementCollection);
 	}
 	
-	/*
-	@PutMapping(value = "/update/{accountNumber}")
-	public Mono<CreditCardAccountCollection> updateCreditCardAccount(@RequestParam("accountNumber") String accountNumber, @RequestBody CreditCardAccountCollection creditCardAccountUpdated) throws Exception{
-		return creditCardAccountService.update(creditCardAccountUpdated, accountNumber);
-	} */
-	
 	@DeleteMapping(value = "/delete")
 	public Mono<Void> deleteCreditCardAccount(@RequestBody CreditCardAccountCollection creditCardAccount) throws Exception{
 		log.info("EJECUTANDO ENDPOINT CreditCardAccountRestController.deleteCreditCardAccount "+creditCardAccount.toString());
 		return creditCardAccountService.delete(creditCardAccount);
 	}
+	
+	@GetMapping(value = "/haveCreditCard/{personCode}")
+	public Mono<Boolean> haveCreditCat(@PathVariable("personCode") String personCode) throws Exception{
+		log.info("EJECUTANDO ENDPOINT CreditCardAccountRestController.haveCreditCard "+personCode);
+		return creditCardAccountService.haveCreditCard(personCode);
+	}
+	
 
 }

@@ -13,5 +13,6 @@ public interface ICreditCardAccountService {
 	public Mono<CreditCardAccountCollection> save(CreditCardAccountCollection collection) throws Exception;
 	public Mono<CreditCardAccountCollection> update(CreditCardAccountCollection updatedCollection, String accountNumber) throws Exception;
 	public Mono<Void> delete(CreditCardAccountCollection collection) throws Exception;
+	public Mono<Boolean> haveCreditCard(String personCode) throws Exception;
 
 }
