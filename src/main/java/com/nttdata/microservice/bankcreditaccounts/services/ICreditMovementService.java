@@ -7,10 +7,9 @@ import reactor.core.publisher.Mono;
 
 public interface ICreditMovementService {
 	
-	public Flux<CreditMovementCollection> getAll() throws Exception;
-	public Flux<CreditMovementCollection> getByPersonCode(String personCode) throws Exception;
-	public Mono<CreditMovementCollection> save(CreditMovementCollection collection) throws Exception;
-	public Mono<CreditMovementCollection> update(CreditMovementCollection updatedCollection, String creditMovementCode) throws Exception;
-	public Mono<Void> delete(CreditMovementCollection collection) throws Exception;
-
+	public Mono<CreditMovementCollection> savePaymentCredit(CreditMovementCollection collection);
+	public Mono<CreditMovementCollection> savePaymentCreditCard(CreditMovementCollection collection);
+	public Mono<CreditMovementCollection> saveConsumeCreditCard(CreditMovementCollection collection);
+	public Mono<CreditMovementCollection> savePaymentCreditThird(CreditMovementCollection collection);
+	
 }

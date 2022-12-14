@@ -1,4 +1,4 @@
-package com.nttdata.microservice.bankcreditaccounts.services;
+package com.nttdata.microservice.bankcreditaccounts.services.impl;
 
 import java.util.Date;
 import java.util.UUID;
@@ -6,16 +6,17 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nttdata.microservice.bankcreditaccounts.collections.CreditAccountCollection;
-import com.nttdata.microservice.bankcreditaccounts.enums.CreditAccountEnum;
+
+
 import com.nttdata.microservice.bankcreditaccounts.repository.ICreditAccountRepository;
+import com.nttdata.microservice.bankcreditaccounts.services.ICreditAccountService;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Service
+//@Service
 public class CreditAccountServiceImpl implements ICreditAccountService {
-	
+	/*
 	@Autowired
 	private ICreditAccountRepository creditAccountRepository;
 
@@ -95,6 +96,6 @@ public class CreditAccountServiceImpl implements ICreditAccountService {
 		// TODO Auto-generated method stub
 		return this.getByPersonCode(personCode).filter(x -> x.getAccountType().equals(CreditAccountEnum.PERSONAL_CREDIT.toString())).count();
 	}
-
+*/
 
 }

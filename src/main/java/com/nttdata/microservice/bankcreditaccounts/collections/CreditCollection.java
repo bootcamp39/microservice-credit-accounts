@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,16 +13,27 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Credit {
+@Document(value = "credits")
+public class CreditCollection {
 
 	@Id
 	private ObjectId id;
-	private String creditCode;
 
 	private String personCode;
-	private String accountType;
-	private String accountNumber;
-	private String currency;
+	private String personType;
+	private String creditType;
+	private String creditNumber;
+	
+	//CREDIT
+	//private Double creditAmount;
+	//private Double creditRemaining;
+	//private Integer quantityCreditLimit;
+	
+	//CREDIT CARD
+	private Double creditAmountLimit;
+	private Double creditAmountAvailable;
+	
+	private Date paymentDate;
 
 	private String state;
 	private Date createdAt;

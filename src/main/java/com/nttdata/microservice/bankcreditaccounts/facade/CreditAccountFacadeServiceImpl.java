@@ -4,17 +4,17 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nttdata.microservice.bankcreditaccounts.collections.CreditAccountCollection;
+
 import com.nttdata.microservice.bankcreditaccounts.collections.CreditMovementCollection;
-import com.nttdata.microservice.bankcreditaccounts.enums.CreditAccountEnum;
+
 import com.nttdata.microservice.bankcreditaccounts.services.ICreditAccountService;
 import com.nttdata.microservice.bankcreditaccounts.services.ICreditMovementService;
 
 import reactor.core.publisher.Mono;
 
-@Service
+//@Service
 public class CreditAccountFacadeServiceImpl implements ICreditAccountFacadeService {
-	
+	/*
 	public static Logger log = Logger.getLogger(CreditAccountFacadeServiceImpl.class);
 	
 	@Autowired
@@ -34,16 +34,6 @@ public class CreditAccountFacadeServiceImpl implements ICreditAccountFacadeServi
 		collection.setCurrency(creditMovementCollection.getCurrency());
 		Mono<CreditMovementCollection> result = creditMovementService.save(collection);
 		
-		// 2. Actualizar saldo deudor
-		/*
-		Mono<CreditAccountCollection> obj = creditAccountService.getByAccountNumber(creditMovementCollection.getAccountNumber())
-											.map(ca -> {
-												ca.setCreditRemaining(ca.getCreditRemaining() - creditMovementCollection.getAmount());
-												
-												return ca;
-											});
-		
-		creditAccountService.update(obj.block(), creditMovementCollection.getAccountNumber()); */
 		
 		return result;
 	}
@@ -81,5 +71,5 @@ public class CreditAccountFacadeServiceImpl implements ICreditAccountFacadeServi
 		return resultCreate;
 	}
 
-	
+	*/
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nttdata.microservice.bankcreditaccounts.collections.CreditCardAccountCollection;
 import com.nttdata.microservice.bankcreditaccounts.collections.CreditMovementCollection;
 import com.nttdata.microservice.bankcreditaccounts.facade.ICreditCardAccountFacadeService;
 import com.nttdata.microservice.bankcreditaccounts.services.ICreditCardAccountService;
@@ -18,10 +17,10 @@ import com.nttdata.microservice.bankcreditaccounts.services.ICreditCardAccountSe
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@RestController
-@RequestMapping(value = "/credit-card-accounts")
+//@RestController
+//@RequestMapping(value = "/credit-card-accounts")
 public class CreditCardAccountRestController {
-	
+	/*
 	public static Logger log = Logger.getLogger(CreditCardAccountRestController.class);
 	
 	@Autowired
@@ -78,6 +77,6 @@ public class CreditCardAccountRestController {
 		log.info("EJECUTANDO ENDPOINT CreditCardAccountRestController.haveCreditCard "+personCode);
 		return creditCardAccountService.haveCreditCard(personCode);
 	}
-	
+	*/
 
 }

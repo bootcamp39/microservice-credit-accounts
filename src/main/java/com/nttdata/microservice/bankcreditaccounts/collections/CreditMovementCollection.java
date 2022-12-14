@@ -19,12 +19,10 @@ public class CreditMovementCollection {
 	@Id
 	private ObjectId id;
 
-	private String creditMovementCode;
 	private String personCode;
-	private String accountNumber;
+	private String creditNumber;
 	private String movementType;
 	private Double amount;
-	private String currency;
 
 	private String state;
 	private Date createdAt;

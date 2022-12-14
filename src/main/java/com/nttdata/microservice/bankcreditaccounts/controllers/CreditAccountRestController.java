@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nttdata.microservice.bankcreditaccounts.collections.CreditAccountCollection;
 import com.nttdata.microservice.bankcreditaccounts.collections.CreditMovementCollection;
 import com.nttdata.microservice.bankcreditaccounts.facade.ICreditAccountFacadeService;
 import com.nttdata.microservice.bankcreditaccounts.services.ICreditAccountService;
@@ -18,11 +17,11 @@ import com.nttdata.microservice.bankcreditaccounts.services.ICreditAccountServic
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@RestController
-@RequestMapping(value = "/credit-accounts")
+//@RestController
+//@RequestMapping(value = "/credit-accounts")
 public class CreditAccountRestController {
 	
-	public static Logger log = Logger.getLogger(CreditAccountRestController.class);
+	/*public static Logger log = Logger.getLogger(CreditAccountRestController.class);
 	
 	@Autowired
 	private ICreditAccountService creditAccountService;
@@ -66,16 +65,11 @@ public class CreditAccountRestController {
 		return creditAccountFacadeService.paymentCredit(creditMovementCollection);
 	}
 	
-	/*
-	@PutMapping(value = "/update/{accountNumber}")
-	public Mono<CreditAccountCollection> updateCreditAccount(@PathVariable("accountNumber") String accountNumber, @RequestBody CreditAccountCollection creditAccountUpdated) throws Exception{
-		return creditAccountService.update(creditAccountUpdated, accountNumber);
-	} */
 	
 	@DeleteMapping(value = "/delete")
 	public Mono<Void> deleteCreditAccount(@RequestBody CreditAccountCollection creditAccount) throws Exception{
 		log.info("EJECUTANDO ENDPOINT CreditAccountRestController.deleteCreditAccount " + creditAccount.toString());
 		return creditAccountService.delete(creditAccount);
 	}
-	
+	*/
 }

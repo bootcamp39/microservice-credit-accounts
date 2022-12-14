@@ -12,10 +12,10 @@ import com.nttdata.microservice.bankcreditaccounts.services.ICreditMovementServi
 
 import reactor.core.publisher.Flux;
 
-@RestController
-@RequestMapping(value = "/credit-movements")
+//@RestController
+//@RequestMapping(value = "/credit-movements")
 public class CreditMovementRestController {
-	
+	/*
 	public static Logger log = Logger.getLogger(CreditMovementRestController.class);
 	
 	@Autowired
@@ -32,5 +32,5 @@ public class CreditMovementRestController {
 		log.info("EJECUTANDO ENDPOINT CreditMovementRestController.getCreditMovementsByPersonCode "+personCode);
 		return creditMovementService.getByPersonCode(personCode);
 	}
-	
+	*/
 }
