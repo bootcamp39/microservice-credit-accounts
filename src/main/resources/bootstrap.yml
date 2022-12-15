@@ -5,4 +5,4 @@ spring:
     config:
       enabled: true
       label: main
-      uri: http://bank-config:8888
+      uri: https://microservice-bank-config.azurewebsites.net

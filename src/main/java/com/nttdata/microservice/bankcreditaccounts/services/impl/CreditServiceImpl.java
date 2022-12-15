@@ -1,6 +1,7 @@
 package com.nttdata.microservice.bankcreditaccounts.services.impl;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import com.nttdata.microservice.bankcreditaccounts.enums.PersonTypeEnum;
 import com.nttdata.microservice.bankcreditaccounts.repository.ICreditRepository;
 import com.nttdata.microservice.bankcreditaccounts.services.ICreditService;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -20,29 +22,69 @@ public class CreditServiceImpl implements ICreditService {
 
 	@Override
 	public Mono<CreditCollection> saveCreditPersonal(CreditCollection credit) {
-		credit.setCreditType(CreditTypeEnum.CREDIT.toString());
-		credit.setPersonType(PersonTypeEnum.PERSONAL.toString());
-		return repository.save(credit);
+		
+		return this.checkIfHaveCreditCard(credit.getPersonCode()).flatMap(x -> {
+			
+			if(!x) {
+				//credit
+				credit.setCreditType(CreditTypeEnum.CREDIT.toString());
+				credit.setPersonType(PersonTypeEnum.PERSONAL.toString());
+				credit.setCreditNumber(UUID.randomUUID().toString());
+				
+				//audit
+				credit.setState("1");
+				credit.setCreatedAt(new Date());
+				
+				return repository.save(credit);
+			}else {
+				return Mono.error(new Exception("La persona ya cuenta con un crédito activo"));
+			}
+			
+		});
 	}
 
 	@Override
 	public Mono<CreditCollection> saveCreditEnterprise(CreditCollection credit) {
+		
+		//credit
 		credit.setCreditType(CreditTypeEnum.CREDIT.toString());
 		credit.setPersonType(PersonTypeEnum.ENTERPRISE.toString());
+		credit.setCreditNumber(UUID.randomUUID().toString());
+		
+		//audit
+		credit.setState("1");
+		credit.setCreatedAt(new Date());
+		
 		return repository.save(credit);
 	}
 
 	@Override
 	public Mono<CreditCollection> saveCreditCardPersonal(CreditCollection credit) {
+		
+		//credit card
 		credit.setCreditType(CreditTypeEnum.CREDIT_CARD.toString());
 		credit.setPersonType(PersonTypeEnum.PERSONAL.toString());
+		credit.setCreditNumber(UUID.randomUUID().toString());
+		
+		//audit
+		credit.setState("1");
+		credit.setCreatedAt(new Date());
+		
 		return repository.save(credit);
 	}
 
 	@Override
 	public Mono<CreditCollection> saveCreditCardEnterprise(CreditCollection credit) {
+		
+		//credit card
 		credit.setCreditType(CreditTypeEnum.CREDIT_CARD.toString());
 		credit.setPersonType(PersonTypeEnum.ENTERPRISE.toString());
+		credit.setCreditNumber(UUID.randomUUID().toString());
+		
+		//audit
+		credit.setState("1");
+		credit.setCreatedAt(new Date());
+		
 		return repository.save(credit);
 	}
 
@@ -50,7 +92,7 @@ public class CreditServiceImpl implements ICreditService {
 	public Mono<Boolean> checkIfHaveCreditCard(String personCode) {
 		
 		return repository.findByPersonCode(personCode)
-				.switchIfEmpty(Mono.error(Exception::new))
+				.switchIfEmpty(Mono.empty())
 				.count()
 				.flatMap(x -> {
 					if(x > 0) {
@@ -86,11 +128,14 @@ public class CreditServiceImpl implements ICreditService {
 		});
 	}
 
+	/**
+	 * Ver si tiene deudas
+	 */
 	@Override
 	public Mono<Boolean> checkIfHaveDebt(String personCode) {
 		return repository.findByPersonCode(personCode).filter(x -> new Date().compareTo(x.getPaymentDate()) > 0)
 				.count().flatMap(w -> {
-			if (w > 1) {
+			if (w > 0) {
 				return Mono.just(true);
 			}
 			return Mono.just(false);

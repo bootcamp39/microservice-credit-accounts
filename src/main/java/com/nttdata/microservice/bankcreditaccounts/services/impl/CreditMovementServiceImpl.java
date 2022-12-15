@@ -1,7 +1,6 @@
 package com.nttdata.microservice.bankcreditaccounts.services.impl;
 
 import java.util.Date;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,18 +22,33 @@ public class CreditMovementServiceImpl implements ICreditMovementService {
 	@Override
 	public Mono<CreditMovementCollection> savePaymentCredit(CreditMovementCollection collection) {
 		collection.setMovementType(CreditMovementTypeEnum.PAYMENT_CREDIT.toString());
+		
+		//audit
+		collection.setState("1");
+		collection.setCreatedAt(new Date());
+		
 		return repository.save(collection);
 	}
 
 	@Override
 	public Mono<CreditMovementCollection> savePaymentCreditCard(CreditMovementCollection collection) {
 		collection.setMovementType(CreditMovementTypeEnum.PAYMENT_CREDIT_CARD.toString());
+		
+		//audit
+		collection.setState("1");
+		collection.setCreatedAt(new Date());
+		
 		return repository.save(collection);
 	}
 
 	@Override
 	public Mono<CreditMovementCollection> saveConsumeCreditCard(CreditMovementCollection collection) {
 		collection.setMovementType(CreditMovementTypeEnum.CONSUME_CREDIT_CARD.toString());
+		
+		//audit
+		collection.setState("1");
+		collection.setCreatedAt(new Date());
+		
 		return repository.save(collection);
 	}
 
@@ -42,6 +56,16 @@ public class CreditMovementServiceImpl implements ICreditMovementService {
 	public Mono<CreditMovementCollection> savePaymentCreditThird(CreditMovementCollection collection) {
 		collection.setMovementType(CreditMovementTypeEnum.PAYMENT_CREDIT_THIRD.toString());
 		return repository.save(collection);
+	}
+
+	@Override
+	public Flux<CreditMovementCollection> listAllMovementsCreditByPersonCode(String personCode) {
+		return repository.findAll().filter(x -> x.getPersonCode().equals(personCode) && x.getMovementType().equals(CreditMovementTypeEnum.PAYMENT_CREDIT.toString()));
+	}
+
+	@Override
+	public Flux<CreditMovementCollection> listAllMovementsCreditCardByPersonCode(String personCode) {
+		return repository.findAll().filter(x -> x.getPersonCode().equals(personCode) && (x.getMovementType().equals(CreditMovementTypeEnum.PAYMENT_CREDIT_CARD.toString()) || x.getMovementType().equals(CreditMovementTypeEnum.CONSUME_CREDIT_CARD.toString())));
 	}
 
 	/*@Override

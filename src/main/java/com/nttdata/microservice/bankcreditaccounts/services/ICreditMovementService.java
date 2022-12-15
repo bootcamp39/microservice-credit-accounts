@@ -12,4 +12,7 @@ public interface ICreditMovementService {
 	public Mono<CreditMovementCollection> saveConsumeCreditCard(CreditMovementCollection collection);
 	public Mono<CreditMovementCollection> savePaymentCreditThird(CreditMovementCollection collection);
 	
+	public Flux<CreditMovementCollection> listAllMovementsCreditByPersonCode(String personCode);
+	public Flux<CreditMovementCollection> listAllMovementsCreditCardByPersonCode(String personCode);
+	
 }
