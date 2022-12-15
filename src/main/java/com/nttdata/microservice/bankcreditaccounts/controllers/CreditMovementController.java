@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nttdata.microservice.bankcreditaccounts.collections.CreditMovementCollection;
+import com.nttdata.microservice.bankcreditaccounts.enums.CreditTypeEnum;
 import com.nttdata.microservice.bankcreditaccounts.services.ICreditMovementService;
+import com.nttdata.microservice.bankcreditaccounts.services.ICreditService;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -24,6 +26,9 @@ public class CreditMovementController {
 	@Autowired
 	private ICreditMovementService service;
 	
+	@Autowired
+	private ICreditService creditService;
+	
 	@PostMapping("/paymentCredit")
 	public Mono<CreditMovementCollection> savePaymentCredit(@RequestBody CreditMovementCollection collection){
 		log.info("EJECUTANDO ENDPOINT CreditMovementController.savePaymentCredit");
@@ -33,6 +38,7 @@ public class CreditMovementController {
 	@PostMapping("/paymentCreditCard")
 	public Mono<CreditMovementCollection> savePaymentCreditCard(@RequestBody CreditMovementCollection collection){
 		log.info("EJECUTANDO ENDPOINT CreditMovementController.savePaymentCreditCard");
+		
 		return service.savePaymentCreditCard(collection);
 	}
 	

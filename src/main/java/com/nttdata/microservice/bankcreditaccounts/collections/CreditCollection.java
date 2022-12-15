@@ -34,6 +34,7 @@ public class CreditCollection {
 	private Double creditAmountAvailable;
 	
 	private Date paymentDate;
+	private Boolean isActiveDebt;
 
 	private String state;
 	private Date createdAt;

@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import com.nttdata.microservice.bankcreditaccounts.collections.CreditMovementCollection;
 import com.nttdata.microservice.bankcreditaccounts.enums.CreditMovementTypeEnum;
 import com.nttdata.microservice.bankcreditaccounts.repository.ICreditMovementRepository;
+import com.nttdata.microservice.bankcreditaccounts.repository.ICreditRepository;
 import com.nttdata.microservice.bankcreditaccounts.services.ICreditMovementService;
+import com.nttdata.microservice.bankcreditaccounts.services.ICreditService;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,38 +20,63 @@ public class CreditMovementServiceImpl implements ICreditMovementService {
 	
 	@Autowired
 	private ICreditMovementRepository repository;
+	
+	@Autowired
+	private ICreditService creditService;
 
 	@Override
 	public Mono<CreditMovementCollection> savePaymentCredit(CreditMovementCollection collection) {
 		collection.setMovementType(CreditMovementTypeEnum.PAYMENT_CREDIT.toString());
 		
-		//audit
-		collection.setState("1");
-		collection.setCreatedAt(new Date());
+		return creditService.getAmountAvailable(collection.getCreditNumber()).flatMap(amountAvailable -> {
+			return creditService.updateAmountAvalilable(collection.getCreditNumber(), amountAvailable - collection.getAmount())
+					.doOnError(err -> Mono.error(err))
+					.flatMap(x -> {
+						//audit
+						collection.setState("1");
+						collection.setCreatedAt(new Date());
+						
+						return repository.save(collection);
+					});
+		});
 		
-		return repository.save(collection);
 	}
 
 	@Override
 	public Mono<CreditMovementCollection> savePaymentCreditCard(CreditMovementCollection collection) {
 		collection.setMovementType(CreditMovementTypeEnum.PAYMENT_CREDIT_CARD.toString());
 		
-		//audit
-		collection.setState("1");
-		collection.setCreatedAt(new Date());
+		//1. actualizar saldo
+		return creditService.getAmountAvailable(collection.getCreditNumber()).flatMap(amountAvailable -> {
+			return creditService.updateAmountAvalilable(collection.getCreditNumber(), amountAvailable + collection.getAmount())
+					.doOnError(err -> Mono.error(err))
+					.flatMap(x -> {
+						//audit
+						collection.setState("1");
+						collection.setCreatedAt(new Date());
+						
+						return repository.save(collection);
+					});
+		});
 		
-		return repository.save(collection);
 	}
 
 	@Override
 	public Mono<CreditMovementCollection> saveConsumeCreditCard(CreditMovementCollection collection) {
 		collection.setMovementType(CreditMovementTypeEnum.CONSUME_CREDIT_CARD.toString());
 		
-		//audit
-		collection.setState("1");
-		collection.setCreatedAt(new Date());
+		return creditService.getAmountAvailable(collection.getCreditNumber()).flatMap(amountAvailable -> {
+			return creditService.updateAmountAvalilable(collection.getCreditNumber(), amountAvailable - collection.getAmount())
+					.doOnError(err -> Mono.error(err))
+					.flatMap(x -> {
+						//audit
+						collection.setState("1");
+						collection.setCreatedAt(new Date());
+						
+						return repository.save(collection);
+					});
+		});
 		
-		return repository.save(collection);
 	}
 
 	@Override

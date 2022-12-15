@@ -30,6 +30,7 @@ public class CreditServiceImpl implements ICreditService {
 				credit.setCreditType(CreditTypeEnum.CREDIT.toString());
 				credit.setPersonType(PersonTypeEnum.PERSONAL.toString());
 				credit.setCreditNumber(UUID.randomUUID().toString());
+				credit.setIsActiveDebt(Boolean.TRUE);
 				
 				//audit
 				credit.setState("1");
@@ -50,6 +51,7 @@ public class CreditServiceImpl implements ICreditService {
 		credit.setCreditType(CreditTypeEnum.CREDIT.toString());
 		credit.setPersonType(PersonTypeEnum.ENTERPRISE.toString());
 		credit.setCreditNumber(UUID.randomUUID().toString());
+		credit.setIsActiveDebt(Boolean.TRUE);
 		
 		//audit
 		credit.setState("1");
@@ -65,6 +67,7 @@ public class CreditServiceImpl implements ICreditService {
 		credit.setCreditType(CreditTypeEnum.CREDIT_CARD.toString());
 		credit.setPersonType(PersonTypeEnum.PERSONAL.toString());
 		credit.setCreditNumber(UUID.randomUUID().toString());
+		credit.setIsActiveDebt(Boolean.FALSE);
 		
 		//audit
 		credit.setState("1");
@@ -80,6 +83,7 @@ public class CreditServiceImpl implements ICreditService {
 		credit.setCreditType(CreditTypeEnum.CREDIT_CARD.toString());
 		credit.setPersonType(PersonTypeEnum.ENTERPRISE.toString());
 		credit.setCreditNumber(UUID.randomUUID().toString());
+		credit.setIsActiveDebt(Boolean.FALSE);
 		
 		//audit
 		credit.setState("1");
@@ -104,10 +108,55 @@ public class CreditServiceImpl implements ICreditService {
 
 	@Override
 	public Mono<CreditCollection> updateAmountAvalilable(String creditNumber, Double newAmountAvailable) {
+		
 		return repository.findByCreditNumber(creditNumber).next().flatMap(collection -> {
-			collection.setCreditAmountAvailable(newAmountAvailable);
-			return repository.save(collection);
-		});
+			
+			//audit
+			collection.setUpdatedAt(new Date());
+			
+			if(collection.getCreditType().equals(CreditTypeEnum.CREDIT.toString())) {
+				
+				if(newAmountAvailable < 0) {
+					return Mono.error(new Exception("El monto pagado supera el crédito disponible. Deuda máxima a pagar: "+collection.getCreditAmountAvailable()));
+				}else {
+					
+					collection.setCreditAmountAvailable(newAmountAvailable);
+					
+					if(newAmountAvailable == 0) {
+						collection.setPaymentDate(new Date());
+						collection.setIsActiveDebt(Boolean.FALSE);
+					}
+					
+				}
+				
+				return repository.save(collection);
+				
+			}else if(collection.getCreditType().equals(CreditTypeEnum.CREDIT_CARD.toString())) {
+				
+				if(newAmountAvailable > collection.getCreditAmountLimit()) {
+					
+					Double montoMaximoDeuda = collection.getCreditAmountLimit() - collection.getCreditAmountAvailable();
+					return Mono.error(new Exception("El monto supera el límite de la tarjeta de crédito. El monto maximo disponible a pagar es : " + montoMaximoDeuda));
+					
+				}else if(newAmountAvailable < 0){
+					return Mono.error(new Exception("No puede usar la tarjeta de crédito debido a que el consumo supera el monto disponible. Monto disponible : "+ collection.getCreditAmountAvailable()));
+					
+				}else {
+					collection.setCreditAmountAvailable(newAmountAvailable);
+					collection.setIsActiveDebt(Boolean.TRUE);
+					
+					if(newAmountAvailable - collection.getCreditAmountLimit() == 0) {
+						collection.setPaymentDate(new Date());
+						collection.setIsActiveDebt(Boolean.FALSE);
+					}
+					
+					return repository.save(collection);
+				}
+				
+			}else {
+				return Mono.error(new Exception("No existe el tipo de tarjeta ingresado."));
+			}
+		}); 
 	}
 
 	@Override
@@ -124,6 +173,9 @@ public class CreditServiceImpl implements ICreditService {
 	public Mono<CreditCollection> updatePaymentDate(String creditNumber, Date paymentDate) {
 		return repository.findByCreditNumber(creditNumber).next().flatMap(collection -> {
 			collection.setPaymentDate(paymentDate);
+			
+			//audit
+			collection.setUpdatedAt(new Date());
 			return repository.save(collection);
 		});
 	}
