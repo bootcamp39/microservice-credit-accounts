@@ -1,8 +1,1 @@
-[2022-11-28 23:50:03] [ INFO ] [CreditAccountRestController:53] EJECUTANDO ENDPOINT CreditAccountRestController.createPersonalCredit CreditAccountCollection(creditAmount=1000.0, creditRemaining=null, quantityCreditLimit=null)
-[2022-11-28 23:50:27] [ INFO ] [CreditAccountRestController:53] EJECUTANDO ENDPOINT CreditAccountRestController.createPersonalCredit CreditAccountCollection(creditAmount=1000.0, creditRemaining=null, quantityCreditLimit=null)
-[2022-11-28 23:50:27] [ INFO ] [CreditAccountFacadeServiceImpl:67] LA PERSONA YA TIENE UN CREDITO PERSONAL
-[2022-12-15 12:49:23] [ INFO ] [CreditController:34] EJECUTANDO ENDPOINT CreditController.saveCreditPersonal
-[2022-12-15 13:11:34] [ INFO ] [CreditController:34] EJECUTANDO ENDPOINT CreditController.saveCreditPersonal
-[2022-12-15 14:42:39] [ INFO ] [CreditController:34] EJECUTANDO ENDPOINT CreditController.saveCreditPersonal
-[2022-12-15 16:16:37] [ INFO ] [CreditController:34] EJECUTANDO ENDPOINT CreditController.saveCreditPersonal
-[2022-12-15 16:27:56] [ INFO ] [CreditController:46] EJECUTANDO ENDPOINT CreditController.saveCreditCardPersonal
+[2022-12-17 00:08:38] [ INFO ] [ReportTransactionMessagePublish:83] Message Sent Successfully for the key 09f44b07-b584-46b7-b5fc-3879ecff7089 and the value is {"personCode":"09f44b07-b584-46b7-b5fc-3879ecff7089","creditNumber":"2dc73903-a330-410c-b5e7-e1c13d3b3b1c","movementType":"PAYMENT_CREDIT","amount":200.0}partition is 0

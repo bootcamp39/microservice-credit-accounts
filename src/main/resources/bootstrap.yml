@@ -6,3 +6,11 @@ spring:
       enabled: true
       label: main
       uri: https://microservice-bank-config.azurewebsites.net
+  kafka:
+      topic1: transaction-report-topic-consumer
+      consumer:
+        bootstrap-servers: localhost:9092
+        group-id: transaction-account-consumer
+      producer:
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.apache.kafka.common.serialization.StringSerializer

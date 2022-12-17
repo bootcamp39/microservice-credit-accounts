@@ -26,9 +26,6 @@ public class CreditMovementController {
 	@Autowired
 	private ICreditMovementService service;
 	
-	@Autowired
-	private ICreditService creditService;
-	
 	@PostMapping("/paymentCredit")
 	public Mono<CreditMovementCollection> savePaymentCredit(@RequestBody CreditMovementCollection collection){
 		log.info("EJECUTANDO ENDPOINT CreditMovementController.savePaymentCredit");
@@ -38,7 +35,6 @@ public class CreditMovementController {
 	@PostMapping("/paymentCreditCard")
 	public Mono<CreditMovementCollection> savePaymentCreditCard(@RequestBody CreditMovementCollection collection){
 		log.info("EJECUTANDO ENDPOINT CreditMovementController.savePaymentCreditCard");
-		
 		return service.savePaymentCreditCard(collection);
 	}
 	

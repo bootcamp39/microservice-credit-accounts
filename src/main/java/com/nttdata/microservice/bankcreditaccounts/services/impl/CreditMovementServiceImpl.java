@@ -5,8 +5,11 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nttdata.microservice.bankcreditaccounts.collections.CreditMovementCollection;
 import com.nttdata.microservice.bankcreditaccounts.enums.CreditMovementTypeEnum;
+import com.nttdata.microservice.bankcreditaccounts.kafka.common.ReportTransactionDto;
+import com.nttdata.microservice.bankcreditaccounts.kafka.producer.ReportTransactionMessagePublish;
 import com.nttdata.microservice.bankcreditaccounts.repository.ICreditMovementRepository;
 import com.nttdata.microservice.bankcreditaccounts.repository.ICreditRepository;
 import com.nttdata.microservice.bankcreditaccounts.services.ICreditMovementService;
@@ -23,6 +26,9 @@ public class CreditMovementServiceImpl implements ICreditMovementService {
 	
 	@Autowired
 	private ICreditService creditService;
+	
+	@Autowired
+	private ReportTransactionMessagePublish reportTransactionMessagePublish;
 
 	@Override
 	public Mono<CreditMovementCollection> savePaymentCredit(CreditMovementCollection collection) {
@@ -35,6 +41,9 @@ public class CreditMovementServiceImpl implements ICreditMovementService {
 						//audit
 						collection.setState("1");
 						collection.setCreatedAt(new Date());
+						
+						//send message kafka
+						this.sendMessageReportPublish(collection);
 						
 						return repository.save(collection);
 					});
@@ -55,6 +64,9 @@ public class CreditMovementServiceImpl implements ICreditMovementService {
 						collection.setState("1");
 						collection.setCreatedAt(new Date());
 						
+						//send message kafka
+						this.sendMessageReportPublish(collection);
+						
 						return repository.save(collection);
 					});
 		});
@@ -72,6 +84,9 @@ public class CreditMovementServiceImpl implements ICreditMovementService {
 						//audit
 						collection.setState("1");
 						collection.setCreatedAt(new Date());
+						
+						//send message kafka
+						this.sendMessageReportPublish(collection);
 						
 						return repository.save(collection);
 					});
@@ -93,6 +108,22 @@ public class CreditMovementServiceImpl implements ICreditMovementService {
 	@Override
 	public Flux<CreditMovementCollection> listAllMovementsCreditCardByPersonCode(String personCode) {
 		return repository.findAll().filter(x -> x.getPersonCode().equals(personCode) && (x.getMovementType().equals(CreditMovementTypeEnum.PAYMENT_CREDIT_CARD.toString()) || x.getMovementType().equals(CreditMovementTypeEnum.CONSUME_CREDIT_CARD.toString())));
+	}
+	
+	private void sendMessageReportPublish(CreditMovementCollection entity) {
+		ReportTransactionDto dto = new ReportTransactionDto();
+		dto.setPersonCode(entity.getPersonCode());
+		dto.setCreditNumber(entity.getCreditNumber());
+		dto.setMovementType(entity.getMovementType());
+		dto.setAmount(entity.getAmount());
+		
+		try {
+			reportTransactionMessagePublish.sendMessage(dto);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	/*@Override
