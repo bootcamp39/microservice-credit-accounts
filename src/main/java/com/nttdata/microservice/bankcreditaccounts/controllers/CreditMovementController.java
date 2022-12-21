@@ -36,17 +36,17 @@ public class CreditMovementController {
 	
 	@PostMapping(value = "/savePaymentCreditCard")
 	public Mono<Void> savePaymentCreditCard(@RequestBody CreditMovementCollection collection){
-		return service.savePaymentCredit(collection);
+		return service.savePaymentCreditCard(collection);
 	}
 	
 	@PostMapping(value = "/saveConsumeCreditCard")
 	public Mono<Void> saveConsumeCreditCard(@RequestBody CreditMovementCollection collection){
-		return service.savePaymentCredit(collection);
+		return service.saveConsumeCreditCard(collection);
 	}
 	
 	@PostMapping(value = "/savePaymentCreditThird")
 	public Mono<Void> savePaymentCreditThird(@RequestBody CreditMovementCollection collection){
-		return service.savePaymentCredit(collection);
+		return service.savePaymentCreditThird(collection);
 	}
 	
 }
