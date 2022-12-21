@@ -7,12 +7,11 @@ import reactor.core.publisher.Mono;
 
 public interface ICreditMovementService {
 	
-	public Mono<CreditMovementCollection> savePaymentCredit(CreditMovementCollection collection);
-	public Mono<CreditMovementCollection> savePaymentCreditCard(CreditMovementCollection collection);
-	public Mono<CreditMovementCollection> saveConsumeCreditCard(CreditMovementCollection collection);
-	public Mono<CreditMovementCollection> savePaymentCreditThird(CreditMovementCollection collection);
+	public Mono<Void> savePaymentCredit(CreditMovementCollection collection);
+	public Mono<Void> savePaymentCreditCard(CreditMovementCollection collection);
+	public Mono<Void> saveConsumeCreditCard(CreditMovementCollection collection);
+	public Mono<Void> savePaymentCreditThird(CreditMovementCollection collection);
 	
-	public Flux<CreditMovementCollection> listAllMovementsCreditByPersonCode(String personCode);
-	public Flux<CreditMovementCollection> listAllMovementsCreditCardByPersonCode(String personCode);
+	public Flux<CreditMovementCollection> getByCreditNumber(String creditNumber);
 	
 }

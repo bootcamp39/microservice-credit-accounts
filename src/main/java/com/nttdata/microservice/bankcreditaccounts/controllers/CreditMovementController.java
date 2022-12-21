@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nttdata.microservice.bankcreditaccounts.collections.CreditMovementCollection;
-import com.nttdata.microservice.bankcreditaccounts.enums.CreditTypeEnum;
 import com.nttdata.microservice.bankcreditaccounts.services.ICreditMovementService;
-import com.nttdata.microservice.bankcreditaccounts.services.ICreditService;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,44 +19,34 @@ import reactor.core.publisher.Mono;
 @RequestMapping(value = "/creditMovements")
 public class CreditMovementController {
 	
-	public static Logger log = Logger.getLogger(CreditMovementRestController.class);
+	public static Logger log = Logger.getLogger(CreditMovementController.class);
 	
 	@Autowired
 	private ICreditMovementService service;
 	
-	@PostMapping("/paymentCredit")
-	public Mono<CreditMovementCollection> savePaymentCredit(@RequestBody CreditMovementCollection collection){
-		log.info("EJECUTANDO ENDPOINT CreditMovementController.savePaymentCredit");
+	@GetMapping(value = "/getMovementsByCreditNumber/{creditNumber}")
+	public Flux<CreditMovementCollection> getMovementsByCreditNumber(@PathVariable("creditNumber") String creditNumber) {
+		return service.getByCreditNumber(creditNumber);
+	}
+	
+	@PostMapping(value = "/savePaymentCredit")
+	public Mono<Void> savePaymentCredit(@RequestBody CreditMovementCollection collection){
 		return service.savePaymentCredit(collection);
 	}
 	
-	@PostMapping("/paymentCreditCard")
-	public Mono<CreditMovementCollection> savePaymentCreditCard(@RequestBody CreditMovementCollection collection){
-		log.info("EJECUTANDO ENDPOINT CreditMovementController.savePaymentCreditCard");
-		return service.savePaymentCreditCard(collection);
-	}
-	
-	@PostMapping("/consumeCreditCard")
-	public Mono<CreditMovementCollection> saveConsumeCreditCard(@RequestBody CreditMovementCollection collection){
-		log.info("EJECUTANDO ENDPOINT CreditMovementController.saveConsumeCreditCard");
-		return service.saveConsumeCreditCard(collection);
-	}
-	
-	public Mono<CreditMovementCollection> savePaymentCreditThird(CreditMovementCollection collection){
-		log.info("EJECUTANDO ENDPOINT CreditMovementController.savePaymentCreditThird");
+	@PostMapping(value = "/savePaymentCreditCard")
+	public Mono<Void> savePaymentCreditCard(@RequestBody CreditMovementCollection collection){
 		return service.savePaymentCredit(collection);
 	}
 	
-	@GetMapping("/getAllCreditMovements/{personCode}")
-	public Flux<CreditMovementCollection> listAllMovementsCreditByPersonCode(@PathVariable(value = "personCode") String personCode){
-		log.info("EJECUTANDO ENDPOINT CreditMovementController.listAllMovementsCreditByPersonCode");
-		return service.listAllMovementsCreditByPersonCode(personCode);
+	@PostMapping(value = "/saveConsumeCreditCard")
+	public Mono<Void> saveConsumeCreditCard(@RequestBody CreditMovementCollection collection){
+		return service.savePaymentCredit(collection);
 	}
 	
-	@GetMapping("/getAllCreditCardMovements/{personCode}")
-	public Flux<CreditMovementCollection> listAllMovementsCreditCardByPersonCode(@PathVariable(value = "personCode") String personCode){
-		log.info("EJECUTANDO ENDPOINT CreditMovementController.listAllMovementsCreditCardByPersonCode");
-		return service.listAllMovementsCreditCardByPersonCode(personCode);
+	@PostMapping(value = "/savePaymentCreditThird")
+	public Mono<Void> savePaymentCreditThird(@RequestBody CreditMovementCollection collection){
+		return service.savePaymentCredit(collection);
 	}
 	
 }
