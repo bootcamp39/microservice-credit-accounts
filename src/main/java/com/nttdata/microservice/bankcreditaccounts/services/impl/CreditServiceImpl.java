@@ -1,6 +1,7 @@
 package com.nttdata.microservice.bankcreditaccounts.services.impl;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class CreditServiceImpl implements ICreditService {
 		
 		credit.setCreditType(CreditTypeEnum.CREDIT.toString());
 		credit.setPersonType(PersonTypeEnum.PERSONAL.toString());
+		credit.setCreditNumber(UUID.randomUUID().toString());
 		
 		// CHECK IF HAVE CREDIT
 		return checkIfHaveCredit(credit.getPersonCode()).flatMap(checkHaveCredit->{
@@ -46,6 +48,7 @@ public class CreditServiceImpl implements ICreditService {
 	public Mono<CreditCollection> saveCreditEnterprise(CreditCollection credit) {
 		credit.setCreditType(CreditTypeEnum.CREDIT.toString());
 		credit.setPersonType(PersonTypeEnum.ENTERPRISE.toString());
+		credit.setCreditNumber(UUID.randomUUID().toString());
 		
 		// CHECK IF HAVE DEBT
 		return checkIfHaveDebt(credit.getPersonCode())
@@ -62,6 +65,7 @@ public class CreditServiceImpl implements ICreditService {
 	public Mono<CreditCollection> saveCreditCardPersonal(CreditCollection credit) {
 		credit.setCreditType(CreditTypeEnum.CREDIT_CARD.toString());
 		credit.setPersonType(PersonTypeEnum.PERSONAL.toString());
+		credit.setCreditNumber(UUID.randomUUID().toString());
 		
 		// CHECK IF HAVE DEBT
 		return checkIfHaveDebt(credit.getPersonCode())
@@ -78,6 +82,7 @@ public class CreditServiceImpl implements ICreditService {
 	public Mono<CreditCollection> saveCreditCardEnterprise(CreditCollection credit) {
 		credit.setCreditType(CreditTypeEnum.CREDIT_CARD.toString());
 		credit.setPersonType(PersonTypeEnum.ENTERPRISE.toString());
+		credit.setCreditNumber(UUID.randomUUID().toString());
 
 		// CHECK IF HAVE DEBT
 		return checkIfHaveDebt(credit.getPersonCode())
