@@ -20,37 +20,95 @@ public class CreditServiceImpl implements ICreditService {
 
 	@Override
 	public Mono<CreditCollection> saveCreditPersonal(CreditCollection credit) {
+		
 		credit.setCreditType(CreditTypeEnum.CREDIT.toString());
 		credit.setPersonType(PersonTypeEnum.PERSONAL.toString());
-		return repository.save(credit);
+		
+		// CHECK IF HAVE CREDIT
+		return checkIfHaveCredit(credit.getPersonCode()).flatMap(checkHaveCredit->{
+			if(!checkHaveCredit) {
+				
+				// CHECK IF HAVE DEBT
+				return checkIfHaveDebt(credit.getPersonCode())
+						.flatMap(checkHaveDebt->{
+							if(!checkHaveDebt) {
+								//SAVE CREDIT
+								return repository.save(credit);	
+							}
+								return Mono.error(RuntimeException::new);
+				});
+			}
+			return Mono.error(RuntimeException::new);
+		});
 	}
 
 	@Override
 	public Mono<CreditCollection> saveCreditEnterprise(CreditCollection credit) {
 		credit.setCreditType(CreditTypeEnum.CREDIT.toString());
 		credit.setPersonType(PersonTypeEnum.ENTERPRISE.toString());
-		return repository.save(credit);
+		
+		// CHECK IF HAVE DEBT
+		return checkIfHaveDebt(credit.getPersonCode())
+				.flatMap(checkHaveDebt->{
+					if(!checkHaveDebt) {
+						//SAVE CREDIT
+						return repository.save(credit);	
+					}
+						return Mono.error(RuntimeException::new);
+		});
 	}
 
 	@Override
 	public Mono<CreditCollection> saveCreditCardPersonal(CreditCollection credit) {
 		credit.setCreditType(CreditTypeEnum.CREDIT_CARD.toString());
 		credit.setPersonType(PersonTypeEnum.PERSONAL.toString());
-		return repository.save(credit);
+		
+		// CHECK IF HAVE DEBT
+		return checkIfHaveDebt(credit.getPersonCode())
+				.flatMap(checkHaveDebt->{
+					if(!checkHaveDebt) {
+						//SAVE CREDIT
+						return repository.save(credit);	
+					}
+						return Mono.error(RuntimeException::new);
+		});
 	}
 
 	@Override
 	public Mono<CreditCollection> saveCreditCardEnterprise(CreditCollection credit) {
 		credit.setCreditType(CreditTypeEnum.CREDIT_CARD.toString());
 		credit.setPersonType(PersonTypeEnum.ENTERPRISE.toString());
-		return repository.save(credit);
+
+		// CHECK IF HAVE DEBT
+		return checkIfHaveDebt(credit.getPersonCode())
+				.flatMap(checkHaveDebt->{
+					if(!checkHaveDebt) {
+						//SAVE CREDIT
+						return repository.save(credit);	
+					}
+						return Mono.error(RuntimeException::new);
+		});
 	}
 
 	@Override
 	public Mono<Boolean> checkIfHaveCreditCard(String personCode) {
 		
 		return repository.findByPersonCode(personCode)
-				.switchIfEmpty(Mono.error(Exception::new))
+				.filter(x-> x.getCreditType().equals(CreditTypeEnum.CREDIT_CARD.toString()))
+				.count()
+				.flatMap(x -> {
+					if(x > 0) {
+						return Mono.just(true);	
+					}
+					return Mono.just(false);
+				});
+	}
+	
+	@Override
+	public Mono<Boolean> checkIfHaveCredit(String personCode) {
+		
+		return repository.findByPersonCode(personCode)
+				.filter(x-> x.getCreditType().equals(CreditTypeEnum.CREDIT.toString()))
 				.count()
 				.flatMap(x -> {
 					if(x > 0) {

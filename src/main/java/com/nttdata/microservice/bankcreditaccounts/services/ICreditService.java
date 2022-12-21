@@ -13,6 +13,7 @@ public interface ICreditService {
 	public Mono<CreditCollection> saveCreditCardPersonal(CreditCollection credit);
 	public Mono<CreditCollection> saveCreditCardEnterprise(CreditCollection credit);
 	
+	public Mono<Boolean> checkIfHaveCredit(String personCode);
 	public Mono<Boolean> checkIfHaveCreditCard(String personCode);
 	public Mono<Boolean> checkIfHaveDebt(String personCode);
 	

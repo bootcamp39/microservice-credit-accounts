@@ -20,10 +20,16 @@ public class CreditController {
 	@Autowired
 	private ICreditService service;
 	
-	@GetMapping(value = "/checkIfHaveCreditCard")
+	@GetMapping(value = "/checkIfHaveCreditCard/{personCode}")
 	public Mono<Boolean> checkIfHaveCreditCard(@PathVariable("personCode") String personCode) {
 		return service.checkIfHaveCreditCard(personCode);
 	}
+	
+	@GetMapping(value = "/checkIfHaveDebt/{personCode}")
+	public Mono<Boolean> checkIfHaveDebt(@PathVariable("personCode") String personCode) {
+		return service.checkIfHaveDebt(personCode);
+	}
+	
 	
 	@PostMapping(value = "/saveCreditPersonal")
 	public Mono<CreditCollection> saveCreditPersonal(@RequestBody CreditCollection collection) {
